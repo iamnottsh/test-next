@@ -53,6 +53,7 @@ function Bar() {
                                 const key = JSON.stringify(await crypto.subtle.exportKey('jwk', publicKey))
                                 await _call('create_topic', {id: await nanoid(), key, value})
                                 setKey(key, JSON.stringify(await crypto.subtle.exportKey('jwk', privateKey)))
+                                setValue('')
                                 setOpen(false)
                             } catch (e) {
                                 error = e
