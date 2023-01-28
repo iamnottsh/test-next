@@ -28,7 +28,7 @@ function Bar() {
         </Button>
         <Drawer anchor="bottom" open={open} onClose={() => {
             if (!disabled) setOpen(false)
-        }}>
+        }} keepMounted>
             <Card>
                 <CardContent>
                     <TextField multiline fullWidth onChange={event => setValue(event.target.value)}/>
@@ -38,8 +38,6 @@ function Bar() {
                         setDisabled(true)
                         let error
                         try {
-                            await new Promise(() => {
-                            })
                             const {publicKey, privateKey} = await crypto.subtle.generateKey(
                                 {
                                     name: 'RSA-OAEP',
@@ -60,10 +58,10 @@ function Bar() {
                         setDisabled(false)
                         if (error) throw error
                     }} disabled={disabled}>
-                        送出
+                        钦此
                     </Button>
                     <Button onClick={() => setOpen(false)} disabled={disabled}>
-                        算了
+                        慢着
                     </Button>
                 </CardActions>
             </Card>
