@@ -60,19 +60,19 @@ function Bar() {
         <ButtonGroup variant="outlined" color="inherit" sx={{ml: 2}}>
             <Button onClick={async () => {
                 await navigator.clipboard.writeText(exportKeys())
-                alert('已复制凭据')
+                alert('已复制凭据！')
             }}>
                 导出
             </Button>
             <Button onClick={() => {
-                const result = prompt('请输入凭据')
+                const result = prompt('请输入凭据！')
                 if (result !== null) importKeys(result)
             }}>
                 并入
             </Button>
             <Button onClick={() => {
-                clearKeys()
-                alert('已清空凭据')
+                if (confirm('你确定要清除凭据吗？如果你没有事先导出凭据以供并入，就再也找不回来了！'))
+                    clearKeys()
             }}>
                 清除
             </Button>
