@@ -35,7 +35,7 @@ export default function Editor(props: EditorProps) {
             color="secondary"
             size="large"
             sx={{mr: 2}}
-            onClick={event => setOpen(true)}
+            onClick={() => setOpen(true)}
         >
             {title}
         </Button>
