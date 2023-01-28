@@ -21,35 +21,48 @@ import {nanoid} from "nanoid/async";
 function Bar() {
     const [open, setOpen] = useState(false)
     const [value, setValue] = useState('')
+    const [disabled, setDisabled] = useState(false)
     return <Toolbar>
         <Button variant="contained" color="secondary" size="large" sx={{mr: 2}} onClick={() => setOpen(true)}>
             发帖
         </Button>
-        <Drawer anchor="bottom" open={open} onClose={() => setOpen(false)}>
+        <Drawer anchor="bottom" open={open} onClose={() => {
+            if (!disabled) setOpen(false)
+        }}>
             <Card>
                 <CardContent>
                     <TextField multiline fullWidth onChange={event => setValue(event.target.value)}/>
                 </CardContent>
                 <CardActions>
                     <Button variant="contained" color="secondary" size="large" onClick={async () => {
-                        const {publicKey, privateKey} = await crypto.subtle.generateKey(
-                            {
-                                name: 'RSA-OAEP',
-                                modulusLength: 4096,
-                                publicExponent: new Uint8Array([1, 0, 1]),
-                                hash: 'SHA-256'
-                            },
-                            true,
-                            ['encrypt', 'decrypt']
-                        )
-                        const key = JSON.stringify(await crypto.subtle.exportKey('jwk', publicKey))
-                        await _call('create_topic', {id: await nanoid(), key, value})
-                        setKey(key, JSON.stringify(await crypto.subtle.exportKey('jwk', privateKey)))
-                        setOpen(false)
-                    }}>
+                        setDisabled(true)
+                        let error
+                        try {
+                            await new Promise(() => {
+                            })
+                            const {publicKey, privateKey} = await crypto.subtle.generateKey(
+                                {
+                                    name: 'RSA-OAEP',
+                                    modulusLength: 4096,
+                                    publicExponent: new Uint8Array([1, 0, 1]),
+                                    hash: 'SHA-256'
+                                },
+                                true,
+                                ['encrypt', 'decrypt']
+                            )
+                            const key = JSON.stringify(await crypto.subtle.exportKey('jwk', publicKey))
+                            await _call('create_topic', {id: await nanoid(), key, value})
+                            setKey(key, JSON.stringify(await crypto.subtle.exportKey('jwk', privateKey)))
+                            setOpen(false)
+                        } catch (e) {
+                            error = e
+                        }
+                        setDisabled(false)
+                        if (error) throw error
+                    }} disabled={disabled}>
                         送出
                     </Button>
-                    <Button onClick={() => setOpen(false)}>
+                    <Button onClick={() => setOpen(false)} disabled={disabled}>
                         算了
                     </Button>
                 </CardActions>
