@@ -5,7 +5,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<{}>
 ) {
-    const {id, key, value} = JSON.parse(req.body)
+    const {id, key, value} = req.body
     if (typeof id !== 'string'
         || id.length > 8192
         || typeof key !== 'string'
@@ -13,7 +13,7 @@ export default async function handler(
         || typeof value !== 'string'
         || value.length > 8192
     ) return
-    await (await _db)
+    await (await _db())
         .db('content')
         .collection<{ id: string, key: string, value: string }>('topics')
         .updateOne(
