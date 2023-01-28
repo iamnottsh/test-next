@@ -121,6 +121,11 @@ export default function Home() {
         </AppBar>
         <Bar/>
         <Container component="main">
+            <Button onClick={async () => {
+                console.log(await _call('get_topics', {sort: 1}))
+            }}>
+                拉取
+            </Button>
             <Typography variant="h2">
                 Next + MUI
             </Typography>
