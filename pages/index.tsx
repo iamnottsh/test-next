@@ -1,86 +1,28 @@
 import Head from 'next/head'
-import {
-    AppBar,
-    Badge,
-    Button,
-    ButtonGroup,
-    Card,
-    CardActions,
-    CardContent,
-    CardHeader,
-    Container,
-    Drawer,
-    Toolbar,
-    Typography
-} from "@mui/material";
+import {AppBar, Badge, Button, ButtonGroup, Container, Toolbar, Typography} from "@mui/material";
 import {useState} from "react";
 import _call from "@/_call";
 import {clearKeys, exportKeys, importKeys, setKey} from "@/_laokey";
 import {nanoid} from "nanoid/async";
-import Mark from "@/Mark";
-import _limit from "@/_limit";
+import Editor from "@/Editor";
 
 function Bar() {
-    const [open, setOpen] = useState(false)
-    const [value, setValue] = useState('')
-    const [disabled, setDisabled] = useState(false)
     return <Toolbar>
-        <Button variant="contained" color="secondary" size="large" sx={{mr: 2}} onClick={() => setOpen(true)}>
-            发帖
-        </Button>
-        <Drawer anchor="bottom" open={open} onClose={() => {
-            if (!disabled) setOpen(false)
-        }} keepMounted>
-            <Container>
-                <Card>
-                    <CardHeader title="发帖"/>
-                    <CardContent>
-                        <Mark
-                            value={value}
-                            onChange={event => setValue(event.target.value)}
-                            defaultShow="对比"
-                            helperText={`${value.length}/${_limit}`}
-                            placeholder="支持markdown格式"
-                        />
-                    </CardContent>
-                    <CardActions>
-                        <Button variant="contained" color="secondary" size="large" onClick={async () => {
-                            if (value.length > _limit) {
-                                alert(`不能多于${_limit}个字！`)
-                            }
-                            setDisabled(true)
-                            let error
-                            try {
-                                const {publicKey, privateKey} = await crypto.subtle.generateKey(
-                                    {
-                                        name: 'RSA-OAEP',
-                                        modulusLength: 4096,
-                                        publicExponent: new Uint8Array([1, 0, 1]),
-                                        hash: 'SHA-256'
-                                    },
-                                    true,
-                                    ['encrypt', 'decrypt']
-                                )
-                                const key = JSON.stringify(await crypto.subtle.exportKey('jwk', publicKey))
-                                await _call('create_topic', {id: await nanoid(), key, value})
-                                setKey(key, JSON.stringify(await crypto.subtle.exportKey('jwk', privateKey)))
-                                setValue('')
-                                setOpen(false)
-                            } catch (e) {
-                                error = e
-                            }
-                            setDisabled(false)
-                            if (error) throw error
-                        }} disabled={disabled}>
-                            钦此
-                        </Button>
-                        <Button onClick={() => setOpen(false)} disabled={disabled}>
-                            慢着
-                        </Button>
-                    </CardActions>
-                </Card>
-            </Container>
-        </Drawer>
+        <Editor title="发帖" emit={async value => {
+            const {publicKey, privateKey} = await crypto.subtle.generateKey(
+                {
+                    name: 'RSA-OAEP',
+                    modulusLength: 4096,
+                    publicExponent: new Uint8Array([1, 0, 1]),
+                    hash: 'SHA-256'
+                },
+                true,
+                ['encrypt', 'decrypt']
+            )
+            const key = JSON.stringify(await crypto.subtle.exportKey('jwk', publicKey))
+            await _call('create_topic', {id: await nanoid(), key, value})
+            setKey(key, JSON.stringify(await crypto.subtle.exportKey('jwk', privateKey)))
+        }}/>
         <Typography variant="h1" sx={{flexGrow: 1}}>
             lao
         </Typography>
