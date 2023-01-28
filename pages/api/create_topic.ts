@@ -15,7 +15,7 @@ export default async function handler(
             || typeof value !== 'string'
             || value.length > _limit
         ) {
-            res.status(400).send('你在逗我？')
+            res.status(406).send('你在逗我？')
             return
         }
         await (await _db())

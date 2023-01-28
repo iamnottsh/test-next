@@ -11,7 +11,7 @@ export default async function handler(
         const {no, sort} = req.body
         const _id = no ? new ObjectId(no) : null
         if (sort !== 1 && sort !== -1) {
-            res.status(400).send('你在逗我？')
+            res.status(406).send('你在逗我？')
             return
         }
         await (await _db())
