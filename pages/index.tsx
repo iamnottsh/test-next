@@ -6,7 +6,8 @@ import {
     ButtonGroup,
     Card,
     CardActions,
-    CardContent, CardHeader,
+    CardContent,
+    CardHeader,
     Container,
     Drawer,
     Toolbar,
@@ -17,6 +18,7 @@ import _call from "@/_call";
 import {clearKeys, exportKeys, importKeys, setKey} from "@/_laokey";
 import {nanoid} from "nanoid/async";
 import Mark from "@/Mark";
+import _limit from "@/_limit";
 
 function Bar() {
     const [open, setOpen] = useState(false)
@@ -33,10 +35,19 @@ function Bar() {
                 <Card>
                     <CardHeader title="发帖"/>
                     <CardContent>
-                        <Mark value={value} onChange={event => setValue(event.target.value)} defaultShow="对比"/>
+                        <Mark
+                            value={value}
+                            onChange={event => setValue(event.target.value)}
+                            defaultShow="对比"
+                            helperText={`${value.length}/${_limit}`}
+                            placeholder="支持markdown格式"
+                        />
                     </CardContent>
                     <CardActions>
                         <Button variant="contained" color="secondary" size="large" onClick={async () => {
+                            if (value.length > _limit) {
+                                alert(`不能多于${_limit}个字！`)
+                            }
                             setDisabled(true)
                             let error
                             try {
