@@ -6,10 +6,9 @@ import {
     ButtonGroup,
     Card,
     CardActions,
-    CardContent,
+    CardContent, CardHeader,
     Container,
     Drawer,
-    TextField,
     Toolbar,
     Typography
 } from "@mui/material";
@@ -17,6 +16,7 @@ import {useState} from "react";
 import _call from "@/_call";
 import {clearKeys, exportKeys, importKeys, setKey} from "@/_laokey";
 import {nanoid} from "nanoid/async";
+import Mark from "@/Mark";
 
 function Bar() {
     const [open, setOpen] = useState(false)
@@ -29,42 +29,45 @@ function Bar() {
         <Drawer anchor="bottom" open={open} onClose={() => {
             if (!disabled) setOpen(false)
         }} keepMounted>
-            <Card>
-                <CardContent>
-                    <TextField multiline minRows={5} fullWidth onChange={event => setValue(event.target.value)}/>
-                </CardContent>
-                <CardActions>
-                    <Button variant="contained" color="secondary" size="large" onClick={async () => {
-                        setDisabled(true)
-                        let error
-                        try {
-                            const {publicKey, privateKey} = await crypto.subtle.generateKey(
-                                {
-                                    name: 'RSA-OAEP',
-                                    modulusLength: 4096,
-                                    publicExponent: new Uint8Array([1, 0, 1]),
-                                    hash: 'SHA-256'
-                                },
-                                true,
-                                ['encrypt', 'decrypt']
-                            )
-                            const key = JSON.stringify(await crypto.subtle.exportKey('jwk', publicKey))
-                            await _call('create_topic', {id: await nanoid(), key, value})
-                            setKey(key, JSON.stringify(await crypto.subtle.exportKey('jwk', privateKey)))
-                            setOpen(false)
-                        } catch (e) {
-                            error = e
-                        }
-                        setDisabled(false)
-                        if (error) throw error
-                    }} disabled={disabled}>
-                        钦此
-                    </Button>
-                    <Button onClick={() => setOpen(false)} disabled={disabled}>
-                        慢着
-                    </Button>
-                </CardActions>
-            </Card>
+            <Container>
+                <Card>
+                    <CardHeader title="发帖"/>
+                    <CardContent>
+                        <Mark value={value} onChange={event => setValue(event.target.value)} defaultShow="对比"/>
+                    </CardContent>
+                    <CardActions>
+                        <Button variant="contained" color="secondary" size="large" onClick={async () => {
+                            setDisabled(true)
+                            let error
+                            try {
+                                const {publicKey, privateKey} = await crypto.subtle.generateKey(
+                                    {
+                                        name: 'RSA-OAEP',
+                                        modulusLength: 4096,
+                                        publicExponent: new Uint8Array([1, 0, 1]),
+                                        hash: 'SHA-256'
+                                    },
+                                    true,
+                                    ['encrypt', 'decrypt']
+                                )
+                                const key = JSON.stringify(await crypto.subtle.exportKey('jwk', publicKey))
+                                await _call('create_topic', {id: await nanoid(), key, value})
+                                setKey(key, JSON.stringify(await crypto.subtle.exportKey('jwk', privateKey)))
+                                setOpen(false)
+                            } catch (e) {
+                                error = e
+                            }
+                            setDisabled(false)
+                            if (error) throw error
+                        }} disabled={disabled}>
+                            钦此
+                        </Button>
+                        <Button onClick={() => setOpen(false)} disabled={disabled}>
+                            慢着
+                        </Button>
+                    </CardActions>
+                </Card>
+            </Container>
         </Drawer>
         <Typography variant="h1" sx={{flexGrow: 1}}>
             lao
