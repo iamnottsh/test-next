@@ -24,6 +24,6 @@ export default async function handler(
             )
         res.status(200).json({})
     } catch (e) {
-        res.status(403).json({e})
+        res.status(403).send(String(e))
     }
 }
