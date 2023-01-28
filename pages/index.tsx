@@ -31,7 +31,7 @@ function Bar() {
         }} keepMounted>
             <Card>
                 <CardContent>
-                    <TextField multiline fullWidth onChange={event => setValue(event.target.value)}/>
+                    <TextField multiline minRows={5} fullWidth onChange={event => setValue(event.target.value)}/>
                 </CardContent>
                 <CardActions>
                     <Button variant="contained" color="secondary" size="large" onClick={async () => {
