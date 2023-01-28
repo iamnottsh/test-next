@@ -1,5 +1,5 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import _db from "@/pages/api/_db";
+import _db from "@/_db";
 
 export default async function handler(
     req: NextApiRequest,

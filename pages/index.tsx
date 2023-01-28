@@ -14,8 +14,8 @@ import {
     Typography
 } from "@mui/material";
 import {useState} from "react";
-import _call from "@/pages/_call";
-import {clearKeys, exportKeys, importKeys, setKey} from "@/pages/_laokey";
+import _call from "@/_call";
+import {clearKeys, exportKeys, importKeys, setKey} from "@/_laokey";
 import {nanoid} from "nanoid/async";
 
 function Bar() {
