@@ -43,7 +43,7 @@ function Bar() {
                             ['encrypt', 'decrypt']
                         )
                         const key = JSON.stringify(await crypto.subtle.exportKey('jwk', publicKey))
-                        console.log(await _call('create_topic', {id: await nanoid(), key, value}))
+                        await _call('create_topic', {id: await nanoid(), key, value})
                         setKey(key, JSON.stringify(await crypto.subtle.exportKey('jwk', privateKey)))
                     }}>
                         送出
