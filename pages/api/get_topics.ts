@@ -1,11 +1,11 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import _db from "@/_db";
 import {ObjectId} from "mongodb";
 import _stack from "@/_stack";
+import {topics} from "@/pages/api/create_topic";
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<{}>
+    res: NextApiResponse
 ) {
     try {
         const {no, sort} = req.body
@@ -14,14 +14,16 @@ export default async function handler(
             res.status(406).send('你在逗我？')
             return
         }
-        await (await _db())
-            .db('content')
-            .collection<{ id: string, key: string, value: string }>('topics')
-            .find(_id ? {_id: {"$gt": _id}} : {})
-            .sort({_id: sort})
-            .limit(_stack)
-            .toArray()
-        res.status(200).json({})
+        const collection = await topics()
+        res.status(200).json({
+            array: await collection
+                .find(_id ? {_id: {"$gt": _id}} : {})
+                .sort({_id: sort})
+                .limit(_stack)
+                .toArray(),
+            total: await collection
+                .countDocuments()
+        })
     } catch (e) {
         res.status(403).send(String(e))
     }
