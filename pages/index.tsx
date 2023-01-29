@@ -64,7 +64,7 @@ export default function Home() {
         <Bar/>
         <Container component="main">
             <Button onClick={async () => {
-                console.log(await _call('get_topics', {sort: 1}))
+                console.log(await _call('get_topics', {reverse: false}))
             }}>
                 拉取
             </Button>

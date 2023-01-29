@@ -8,9 +8,9 @@ export default async function handler(
     res: NextApiResponse
 ) {
     try {
-        const {no, sort} = req.body
+        const {no, reverse} = req.body
         const _id = no ? new ObjectId(no) : null
-        if (sort !== 1 && sort !== -1) {
+        if (typeof reverse !== 'boolean') {
             res.status(406).send('你在逗我？')
             return
         }
@@ -18,7 +18,7 @@ export default async function handler(
         res.status(200).json({
             array: await collection
                 .find(_id ? {_id: {"$gt": _id}} : {})
-                .sort({_id: sort})
+                .sort({_id: reverse ? -1 : 1})
                 .limit(_stack)
                 .toArray(),
             total: await collection
