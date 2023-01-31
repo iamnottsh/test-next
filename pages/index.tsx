@@ -1,10 +1,11 @@
 import Head from 'next/head'
-import {AppBar, Badge, Button, ButtonGroup, Container, Toolbar, Typography} from "@mui/material";
-import {useState} from "react";
+import {AppBar, Button, ButtonGroup, Card, Container, Toolbar, Typography} from "@mui/material";
 import _call from "@/_call";
-import {clearKeys, exportKeys, importKeys, setKey} from "@/_laokey";
+import {clearKeys, exportKeys, getKey, importKeys, setKey} from "@/_laokey";
 import {nanoid} from "nanoid/async";
 import Editor from "@/Editor";
+import Items from "@/Items";
+import {useEffect, useRef, useState} from "react";
 
 function Bar() {
     return <Toolbar>
@@ -23,7 +24,7 @@ function Bar() {
             await _call('create_topic', {id: await nanoid(), key, value})
             setKey(key, JSON.stringify(await crypto.subtle.exportKey('jwk', privateKey)))
         }}/>
-        <Typography variant="h1" sx={{flexGrow: 1}}>
+        <Typography variant="h1" sx={{ml: 2, flexGrow: 1}}>
             lao
         </Typography>
         <ButtonGroup variant="outlined" color="inherit" sx={{ml: 2}}>
@@ -50,7 +51,13 @@ function Bar() {
 }
 
 export default function Home() {
-    const [counter, setCounter] = useState(0)
+    const [items, setItems] = useState<{ key: string, value: string, _id: string }[]>([])
+    const upMore = useRef<() => void>(), downMore = useRef<() => void>()
+    useEffect(() => {
+        setTimeout(() => {
+            setItems([{key: 'k', value: 'v', _id: 'i'}])
+        }, 1000)
+    }, [])
     return <>
         <Head>
             <title>lao</title>
@@ -63,46 +70,13 @@ export default function Home() {
         </AppBar>
         <Bar/>
         <Container component="main">
-            <Button onClick={async () => {
-                console.log(await _call('get_topics', {reverse: false}))
-            }}>
-                拉取
-            </Button>
-            <Typography variant="h2">
-                Next + MUI
-            </Typography>
-            <Badge badgeContent={counter} color="secondary">
-                <Button
-                    variant="contained"
-                    onClick={() => {
-                        setCounter(counter + 1)
-                    }}
-                >
-                    点我
-                </Button>
-            </Badge>
-            <Typography>
-                miku miku miku miku miku miku miku miku miku miku miku miku miku miku miku
-                miku miku miku miku miku miku miku miku miku miku miku miku miku miku miku
-                miku miku miku miku miku miku miku miku miku miku miku miku miku miku miku
-                miku miku miku miku miku miku miku miku miku miku miku miku miku miku miku
-                miku miku miku miku miku miku miku miku miku miku miku miku miku miku miku
-                miku miku miku miku miku miku miku miku miku miku miku miku miku miku miku
-                miku miku miku miku miku miku miku miku miku miku miku miku miku miku miku
-                miku miku miku miku miku miku miku miku miku miku miku miku miku miku miku
-                miku miku miku miku miku miku miku miku miku miku miku miku miku miku miku
-            </Typography>
-            <Typography>
-                miku miku miku miku miku miku miku miku miku miku miku miku miku miku miku
-                miku miku miku miku miku miku miku miku miku miku miku miku miku miku miku
-                miku miku miku miku miku miku miku miku miku miku miku miku miku miku miku
-                miku miku miku miku miku miku miku miku miku miku miku miku miku miku miku
-                miku miku miku miku miku miku miku miku miku miku miku miku miku miku miku
-                miku miku miku miku miku miku miku miku miku miku miku miku miku miku miku
-                miku miku miku miku miku miku miku miku miku miku miku miku miku miku miku
-                miku miku miku miku miku miku miku miku miku miku miku miku miku miku miku
-                miku miku miku miku miku miku miku miku miku miku miku miku miku miku miku
-            </Typography>
+            <Items upMore={upMore} downMore={downMore} onUpMore={async () => {
+
+            }} onDownMore={async () => {
+
+            }} list={items.map(({key, value, _id}) => <Card key={_id} sx={true ? {border: '5px solid primary.main'} : {}}>
+                {value}
+            </Card>)}/>
         </Container>
     </>
 }
