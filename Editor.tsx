@@ -74,8 +74,9 @@ export default function Editor({title, emit}: EditorProps) {
                             </Grid>
                         </Grid>
                     </CardContent>
-                    {sending ? <LinearProgress/> :
-                        <CardActions>
+                    {sending
+                        ? <LinearProgress/>
+                        : <CardActions>
                             <Button variant="contained" color="secondary" size="large" onClick={() => {
                                 if (value.length > _limit) {
                                     alert(`不能多于${_limit}个字！`)
@@ -92,7 +93,8 @@ export default function Editor({title, emit}: EditorProps) {
                             }}>
                                 钦此
                             </Button>
-                        </CardActions>}
+                        </CardActions>
+                    }
                 </Card>
             </Container>
         </Drawer>

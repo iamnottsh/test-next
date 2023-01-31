@@ -5,7 +5,7 @@ import {clearKeys, exportKeys, getKey, importKeys, setKey} from "@/_laokey";
 import {nanoid} from "nanoid/async";
 import Editor from "@/Editor";
 import Items from "@/Items";
-import {useEffect, useRef, useState} from "react";
+import {useRef, useState} from "react";
 
 function Bar() {
     return <Toolbar>
@@ -53,11 +53,6 @@ function Bar() {
 export default function Home() {
     const [items, setItems] = useState<{ key: string, value: string, _id: string }[]>([])
     const upMore = useRef<() => void>(), downMore = useRef<() => void>()
-    useEffect(() => {
-        setTimeout(() => {
-            setItems([{key: 'k', value: 'v', _id: 'i'}])
-        }, 1000)
-    }, [])
     return <>
         <Head>
             <title>lao</title>
@@ -69,14 +64,24 @@ export default function Home() {
             <Bar/>
         </AppBar>
         <Bar/>
-        <Container component="main">
-            <Items upMore={upMore} downMore={downMore} onUpMore={async () => {
+        <Container component="main" sx={{mt: 4, mb: 4}}>
+            <Items upMore={upMore} downMore={downMore} onUpMore={
+                () => new Promise(resolve => {
+                    setTimeout(() => {
+                        setItems([{key: 'k', value: 'v', _id: 'i'}])
+                        resolve()
+                    }, 1000)
+                })
+            } onDownMore={async () => {
 
-            }} onDownMore={async () => {
-
-            }} list={items.map(({key, value, _id}) => <Card key={_id} sx={true ? {border: '5px solid primary.main'} : {}}>
-                {value}
-            </Card>)}/>
+            }} list={items.map(({key, value, _id}) =>
+                <Card key={_id} sx={{
+                    border: 2,
+                    borderColor: getKey(key) ? 'secondary.main' : 'text.primary'
+                }}>
+                    {value}
+                </Card>
+            )}/>
         </Container>
     </>
 }
