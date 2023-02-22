@@ -17,7 +17,8 @@ export default async function handler(
         const collection = await topics()
         res.status(200).json({
             array: await collection
-                .find(_id ? {_id: {"$gt": _id}} : {})
+                .find({_id: {'$gt': _id}
+                })
                 .sort({_id: reverse ? -1 : 1})
                 .limit(_stack)
                 .toArray(),

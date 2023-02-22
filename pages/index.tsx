@@ -65,14 +65,14 @@ export default function Home() {
         </AppBar>
         <Bar/>
         <Container component="main" sx={{mt: 4, mb: 4}}>
-            <Items upMore={upMore} downMore={downMore} onUpMore={
-                () => new Promise(resolve => {
-                    setTimeout(() => {
-                        setItems([{key: 'k', value: 'v', _id: 'i'}])
-                        resolve()
-                    }, 1000)
-                })
-            } onDownMore={async () => {
+            <Items upMore={upMore} downMore={downMore} onUpMore={async () => {
+                setItems(items.concat(
+                    await _call('get_topics', {
+                        ...(items.length > 0 && {no: items[0]._id}),
+                        reverse: false
+                    })
+                ))
+            }} onDownMore={async () => {
 
             }} list={items.map(({key, value, _id}) =>
                 <Card key={_id} sx={{
