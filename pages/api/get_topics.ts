@@ -15,16 +15,13 @@ export default async function handler(
             return
         }
         const collection = await topics()
-        res.status(200).json({
-            array: await collection
-                .find({_id: {'$gt': _id}
-                })
-                .sort({_id: reverse ? -1 : 1})
-                .limit(_stack)
-                .toArray(),
-            total: await collection
-                .countDocuments()
-        })
+        const array = await collection
+            .find({...(_id && {_id: reverse ? {$gt: _id} : {$lt: _id}})})
+            .sort({_id: reverse ? 1 : -1})
+            .limit(_stack)
+            .project({id: false})
+            .toArray()
+        res.status(200).json(reverse ? array : array.reverse())
     } catch (e) {
         res.status(403).send(String(e))
     }

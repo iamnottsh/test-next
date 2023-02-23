@@ -6,7 +6,7 @@ interface ItemsProps {
     downMore: MutableRefObject<(() => void) | undefined>
     onUpMore: () => Promise<void>
     onDownMore: () => Promise<void>
-    list: ReactNode
+    list: ReactNode[]
 }
 
 export default function Items({upMore, downMore, onUpMore, onDownMore, list}: ItemsProps) {
@@ -16,7 +16,7 @@ export default function Items({upMore, downMore, onUpMore, onDownMore, list}: It
         {onUp
             ? <LinearProgress/>
             : <Button ref={(ref) => {
-                if (ref) upMore.current = ref.click
+                if (ref) upMore.current = () => ref.click()
             }} onClick={() => {
                 setOnUp(true)
                 onUpMore()
@@ -31,7 +31,7 @@ export default function Items({upMore, downMore, onUpMore, onDownMore, list}: It
         {onDown
             ? <LinearProgress/>
             : <Button ref={(ref) => {
-                if (ref) downMore.current = ref.click
+                if (ref) downMore.current = () => ref.click()
             }} onClick={() => {
                 setOnDown(true)
                 onDownMore()

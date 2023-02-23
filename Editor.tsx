@@ -53,7 +53,7 @@ export default function Editor({title, emit}: EditorProps) {
                         </ToggleButtonGroup>
                     </Box>}/>
                     <CardContent>
-                        <Grid container maxHeight="50vh" overflow="scroll" columnSpacing={2}>
+                        <Grid container maxHeight="50vh" overflow="auto" columnSpacing={2}>
                             <Grid item xs={show === '编辑' ? 12 : show === '渲染' ? 0 : 6}>
                                 {show !== '渲染' &&
                                     <TextField
