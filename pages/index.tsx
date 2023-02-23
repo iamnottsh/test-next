@@ -111,7 +111,7 @@ export default function Home() {
                     >
                         <CardHeader
                             title={`>>${_id}`}
-                            subheader={dayjs(new ObjectId(_id).getTimestamp()).fromNow()}
+                            subheader={((n) => `${n.toLocaleString()}（${dayjs(n).fromNow()}）`)(new ObjectId(_id).getTimestamp())}
                         />
                         <CardContent
                             dangerouslySetInnerHTML={{__html: xss(marked(value))}}
